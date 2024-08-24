@@ -86,6 +86,41 @@ verNumeroPessoas :: [Pessoa] -> IO ()
 verNumeroPessoas pessoas = do
     putStrLn $ "\nNúmero de pessoas cadastradas: " ++ show (length pessoas) ++ "\n"
 
+-- Função para buscar uma pessoa pelo nome
+buscarPessoa :: [Pessoa] -> IO ()
+buscarPessoa pessoas = do
+    putStr "Digite o nome da pessoa que deseja buscar: "
+    hFlush stdout
+    nomeBuscado <- getLine
+    case localizarPessoa pessoas nomeBuscado of
+        Just pessoa -> print pessoa
+        Nothing     -> putStrLn "Pessoa não encontrada."
+    putStrLn ""
+
+-- Função para ver o número de pessoas em uma cidade
+verNumeroPorCidade :: [Pessoa] -> IO ()
+verNumeroPorCidade pessoas = do
+    putStr "Digite o nome da cidade: "
+    hFlush stdout
+    cidadeBuscada <- getLine
+    let total = totalPorCidade pessoas cidadeBuscada
+    putStrLn $ "Número de pessoas na cidade " ++ cidadeBuscada ++ ": " ++ show total
+    putStrLn ""
+
+-- Função para ver a média de idade
+verMediaIdade :: [Pessoa] -> IO ()
+verMediaIdade pessoas = do
+    let media = mediaIdade pessoas
+    putStrLn $ "Média de idade dos cadastrados: " ++ show media
+    putStrLn ""
+
+-- Função para ver a média da população (total da média de idade de todos os cadastrados)
+verMediaPopulacao :: [Pessoa] -> IO ()
+verMediaPopulacao pessoas = do
+    let media = mediaIdade pessoas
+    putStrLn $ "Média da população: " ++ show media
+    putStrLn ""
+
 -- Função que exibe o menu e gerencia as escolhas do usuário
 menu :: [Pessoa] -> IO ()
 menu pessoas = do
@@ -93,7 +128,11 @@ menu pessoas = do
     putStrLn "1. Cadastrar nova pessoa"
     putStrLn "2. Ver lista de pessoas cadastradas"
     putStrLn "3. Ver número de pessoas cadastradas"
-    putStrLn "4. Sair"
+    putStrLn "4. Buscar pessoa pelo nome"
+    putStrLn "5. Ver número de pessoas em uma cidade"
+    putStrLn "6. Ver média de idade dos cadastrados"
+    putStrLn "7. Ver média da população"
+    putStrLn "8. Sair"
     putStr "Escolha uma opção: "
     hFlush stdout
     opcao <- getLine
@@ -109,7 +148,19 @@ menu pessoas = do
         "3" -> do
             verNumeroPessoas pessoas
             menu pessoas
-        "4" -> putStrLn "Saindo do sistema. Até mais!"
+        "4" -> do
+            buscarPessoa pessoas
+            menu pessoas
+        "5" -> do
+            verNumeroPorCidade pessoas
+            menu pessoas
+        "6" -> do
+            verMediaIdade pessoas
+            menu pessoas
+        "7" -> do
+            verMediaPopulacao pessoas
+            menu pessoas
+        "8" -> putStrLn "Saindo do sistema. Até mais!"
         _   -> do
             putStrLn "Opção inválida. Tente novamente.\n"
             menu pessoas
